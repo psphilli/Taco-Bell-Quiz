@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Title for the application. [CHAR LIMIT=12] -->
+    <string name="app_name">Taco Bell Quiz</string>
+
+    <!-- Questions -->
+    <string name="question_one">How much does a Crunchy Taco cost?</string>
+    <string name="question_two">Is the acutal name of the Bean Burrito\'s red sauce \'Salsa Roja\'?</string>
+    <string name="question_three">What are the ingredients in the Beefy 5 Layer Burrito?</string>
+    <string name="question_four">Is Taco Bell good to eat during pregnancy?</string>
+    <string name="question_five">Which costs more Burrito Supreme or Mexican Pizza?</string>
+    <string name="question_six">How old was Gidget when she died?</string>
+    <string name="question_seven">Conspiracist believe that the Illuminati runs Taco Bell and that the six (6) embedded in the logo symbolizes the \'Mark of the Beast\'?</string>
+    <string name="question_eight">In what year was the Cheese Quesadilla added to the menu?</string>
+
+    <!-- Questions -->
+    <string name="answer_one">1) <xliff:g id="correct_incorrect" example="CORRECT">%s</xliff:g> - The Crunchy Taco is the basis for all other menu items.  Knowing the correct cost is $1.29 is key to being able to maximize your order with the funds you have on hand.</string>
+    <string name="answer_two">2) <xliff:g id="correct_incorrect" example="CORRECT">%s</xliff:g> - Although \'Salsa Roja\' or Red Sauce is of the key ingredients of the Bean Burrito, Taco Bell does not use the Spanish designation.</string>
+    <string name="answer_three">3) <xliff:g id="correct_incorrect" example="CORRECT">%s</xliff:g> - The ingredients of the Beefy 5 Layer Burrito are Beef, Beans, Cheese, Sour Cream and Nacho Cheese.  Mouth Water!</string>
+    <string name="answer_four">4) <xliff:g id="correct_incorrect" example="CORRECT">%s</xliff:g> - Taco Bell is good to eat anytime, but is reported to be especially appealing during pregnancy! YUM! According to USA Today, \'There are some nutritious ingredients...\'</string>
+    <string name="answer_five">5) <xliff:g id="correct_incorrect" example="CORRECT">%s</xliff:g> - Save up your money, cause both will set you back. The Mexican Pizza at $3.59 costs more than the Burrito Supreme comes in at $3.19.</string>
+    <string name="answer_six">6) <xliff:g id="correct_incorrect" example="CORRECT">%s</xliff:g> - Was Gidget really a she? Gidget died in 2009 at the ripe old age of 15 human years (105 dog years), and was immediately taxidermied and sent to the Smithsonian.</string>
+    <string name="answer_seven">7) <xliff:g id="correct_incorrect" example="CORRECT">%s</xliff:g> - Of course the Taco Bell Corporation is to big not to be controlled by the Illuminati.</string>
+    <string name="answer_eight">8) <xliff:g id="correct_incorrect" example="CORRECT">%s</xliff:g> - The Cheese Quesadilla appeared on the in 2002, not a minute to early.</string>
+
+    <!--
+      Submit quiz results for evaluation. It will be shown in the format of
+      "You have answered 6 out of 8 question correct, press submit to see results, or go back and try to fix the incorrect responses". [CHAR LIMIT=NONE]
+    -->
+    <string name="submit_all_correct_text">You have answered <xliff:g id="number_correct" example="6">%d</xliff:g> out of 8 questions correctly. Press submit to see the results, or go back and try to fix the incorrect responses.</string>
+
+    <!--
+      Subject line for the quiz summary email. It will be in the format of
+      "Taco Bell Quiz Summary" [CHAR LIMIT=NONE]
+    -->
+    <string name="quiz_summary_email_subject">Taco Bell Quiz Summary</string>
+
+    <!-- Toast's -->
+    <string name="price_help">Please enter price</string>
+    <string name="choose_five_help">Please choose 5</string>
+    <string name="yes_no_help">Please choose yes or no</string>
+    <string name="costs_more_help">Please choose which one costs more</string>
+
+    <!-- Control text -->
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="burrito_supreme">Burrito\nSupreme</string>
+    <string name="mexican_pizza">Mexican\nPizza</string>
+
+    <string name="beef">Beef</string>
+    <string name="beans">Beans</string>
+    <string name="red_sauce">Red Sauce</string>
+    <string name="cheese">Cheese</string>
+    <string name="onion">Onion</string>
+    <string name="sour_cream">Sour Cream</string>
+    <string name="nacho_cheese">Nacho Cheese</string>
+    <string name="jalapeno_sauce">Jalapeno Sauce</string>
+
+    <string name="initial_age">7</string>
+    <string name="initial_year">1997</string>
+
+    <string name="submit_text">Submit</string>
+</resources>

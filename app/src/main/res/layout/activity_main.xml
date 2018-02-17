@@ -1,0 +1,30 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+    <ImageView
+        android:id="@+id/left_nav"
+        android:layout_width="32dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|left"
+        android:background="@android:color/transparent"
+        android:onClick="onBackwardClick"
+        android:src="@drawable/chevronleft" />
+
+    <ImageView
+        android:id="@+id/right_nav"
+        android:layout_width="32dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|right"
+        android:background="@android:color/transparent"
+        android:onClick="onForwardClick"
+        android:src="@drawable/chevronright" />
+
+</FrameLayout>
