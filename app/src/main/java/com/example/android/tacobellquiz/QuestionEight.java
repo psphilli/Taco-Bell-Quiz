@@ -10,7 +10,6 @@ import android.widget.TextView;
 /**
  * Created by psphilli on 2/11/2018.
  */
-
 public class QuestionEight extends Fragment {
 
     private final String LOG_TAG = QuestionEight.class.getSimpleName();

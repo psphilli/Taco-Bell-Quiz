@@ -1,5 +1,6 @@
 package com.example.android.tacobellquiz;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -88,7 +89,7 @@ public class MainActivity extends FragmentActivity {
             age++;
         }
         textView.setText("" + age);
-
+        answers.setSix(age);
     }
 
     /**
@@ -104,7 +105,7 @@ public class MainActivity extends FragmentActivity {
             year++;
         }
         textView.setText("" + year);
-
+        answers.setEight(year);
     }
 
     /**
@@ -218,9 +219,7 @@ public class MainActivity extends FragmentActivity {
                 }
 
                 case (6): {
-                    TextView textView = findViewById(R.id.age_text_view);
-                    answers.setSix(Integer.parseInt(textView.getText().toString()));
-                    Log.i(LOG_TAG, " answers.six '" + answers.getSix() + "'");
+                    Log.i(LOG_TAG, " answers.six'" + answers.getSix() + "'");
                     break;
                 }
 
@@ -238,8 +237,6 @@ public class MainActivity extends FragmentActivity {
                 }
 
                 case (8): {
-                    TextView yearTextView = findViewById(R.id.year_text_view);
-                    answers.setEight(Integer.parseInt(yearTextView.getText().toString()));
                     Log.i(LOG_TAG, " answers.eight '" + answers.getEight() + "'");
 
                     int numCorrect = answers.getNumberCorrect();
@@ -263,12 +260,12 @@ public class MainActivity extends FragmentActivity {
 
     public String getGidgetAge()
     {
-        return "" + answers.getSix();
+        return String.valueOf(answers.getSix());
     }
 
     public String getYearQuesadilla()
     {
-        return "" + answers.getEight();
+        return String.valueOf(answers.getEight());
     }
 
     /**

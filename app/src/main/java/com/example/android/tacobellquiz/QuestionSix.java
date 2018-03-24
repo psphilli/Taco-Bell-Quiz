@@ -19,7 +19,6 @@ public class QuestionSix extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.question_six, container, false);
 
         TextView textView = view.findViewById(R.id.age_text_view);
