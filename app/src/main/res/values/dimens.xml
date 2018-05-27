@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Main linear layout left/right margins -->
+    <dimen name="layout_left_right_margin">28dp</dimen>
+
+    <!-- Question top margin -->
+    <dimen name="image_bottom_margin">32dp</dimen>
+
+    <!-- Quiz qestion text size -->
+    <dimen name="question_text_size">26sp</dimen>
+
+    <!-- Quiz qestion text size -->
+    <dimen name="image_height">200dp</dimen>
+</resources>

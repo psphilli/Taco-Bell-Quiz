@@ -15,7 +15,6 @@
         android:layout_height="56dp"
         android:layout_gravity="bottom|left"
         android:background="@android:color/transparent"
-        android:onClick="onBackwardClick"
         android:src="@drawable/chevronleft" />
 
     <ImageView
@@ -24,7 +23,6 @@
         android:layout_height="56dp"
         android:layout_gravity="bottom|right"
         android:background="@android:color/transparent"
-        android:onClick="onForwardClick"
         android:src="@drawable/chevronright" />
 
 </FrameLayout>

@@ -1,8 +1,9 @@
 package com.example.android.tacobellquiz;
 
-import android.app.Activity;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
-import android.widget.CheckBox;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,21 +11,20 @@ import java.util.List;
 /**
  * Class for managing quiz answers
  */
-public class QuizAnswers
+public class QuizAnswers implements Parcelable
 {
     private final String LOG_TAG = QuizAnswers.class.getSimpleName();
 
     //region Fields & Properties
 
-    private Activity activity;
     private String one;
-    private boolean two;
-    private List<String> three = new ArrayList<String>();
-    private boolean four;
-    private boolean five;
-    private int six = 10;
-    private boolean seven;
-    private int eight = 1997;
+    private Boolean two;
+    private List<String> three = new ArrayList<>();
+    private Boolean four;
+    private Boolean five;
+    private int six = Integer.parseInt(TacoBellQuizApplication.getContext().getString(R.string.initial_age));
+    private Boolean seven;
+    private int eight = Integer.parseInt(TacoBellQuizApplication.getContext().getString(R.string.initial_year));
 
     public String getOne() {
         return one;
@@ -34,13 +34,13 @@ public class QuizAnswers
         this.one = one;
     }
 
-    public boolean isTwo() {
+    public Boolean getTwo() {
         return two;
     }
 
-    public void setTwo(boolean two) {
-        this.two = two;
-    }
+    public void setTwo(boolean two) { this.two = two; }
+
+    private void setTwo(byte b) { this.two = setNullableBoolFromByte(b); }
 
     public List<String> getThree() {
         return three;
@@ -50,7 +50,7 @@ public class QuizAnswers
         this.three = three;
     }
 
-    public boolean isFour() {
+    public Boolean getFour() {
         return four;
     }
 
@@ -58,13 +58,17 @@ public class QuizAnswers
         this.four = four;
     }
 
-    public boolean isFive() {
+    private void setFour(byte b) { this.four = setNullableBoolFromByte(b); }
+
+    public Boolean getFive() {
         return five;
     }
 
     public void setFive(boolean five) {
         this.five = five;
     }
+
+    private void setFive(byte b) { this.five = setNullableBoolFromByte(b); }
 
     public int getSix() {
         return six;
@@ -74,13 +78,15 @@ public class QuizAnswers
         this.six = six;
     }
 
-    public boolean isSeven() {
+    public Boolean getSeven() {
         return seven;
     }
 
     public void setSeven(boolean seven) {
         this.seven = seven;
     }
+
+    private void setSeven(byte b) { this.seven = setNullableBoolFromByte(b); }
 
     public int getEight() {
         return eight;
@@ -92,16 +98,230 @@ public class QuizAnswers
 
     //endregion
 
-    public QuizAnswers(Activity activity) {
-        this.activity = activity;
+    //region Constructors
+
+    /**
+     * Empty constructor used during initial object creation
+     */
+    public QuizAnswers() {
+    }
+
+    /**
+     * Constructor for retaining the users previously selected answers
+     *
+     * @param parcel is the serialized version of the previously selected answers
+     */
+    private QuizAnswers(Parcel parcel) {
+        setOne(parcel.readString());
+        setTwo(parcel.readByte());
+        setThree(parcel.createStringArrayList());
+        setFour(parcel.readByte());
+        setFive(parcel.readByte());
+        setSix(parcel.readInt());
+        setSeven(parcel.readByte());
+        setEight(parcel.readInt());
+    }
+
+    //endregion
+
+    //region Implementation of Parcelable
+
+    /**
+     * Describe the kinds of special objects contained in this Parcelable
+     * instance's marshaled representation. For example, if the object will
+     * include a file descriptor in the output of {@link #writeToParcel(Parcel, int)},
+     * the return value of this method must include the
+     * {@link #CONTENTS_FILE_DESCRIPTOR} bit.
+     *
+     * @return a bitmask indicating the set of special object types marshaled
+     * by this Parcelable object instance.
+     */
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    /**
+     * Flatten this object in to a Parcel.
+     *
+     * @param parcel  The Parcel in which the object should be written.
+     * @param flags Additional flags about how the object should be written.
+     *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
+     */
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeString(getOne());
+        parcel.writeByte(getByteFromNullableBool(getTwo()));
+        parcel.writeStringList(getThree());
+        parcel.writeByte(getByteFromNullableBool(getFour()));
+        parcel.writeByte(getByteFromNullableBool(getFive()));
+        parcel.writeInt(getSix());
+        parcel.writeByte(getByteFromNullableBool(getSeven()));
+        parcel.writeInt(getEight());
+    }
+
+
+    /**
+     * Used for the binder to reconstruct the parcel
+     */
+    public final static Parcelable.Creator<QuizAnswers> CREATOR = new Parcelable.Creator<QuizAnswers>() {
+        @Override
+        public QuizAnswers createFromParcel(Parcel parcel) {
+            return new QuizAnswers(parcel);
+        }
+
+        @Override
+        public QuizAnswers[] newArray(int i) {
+            return new QuizAnswers[i];
+        }
+    };
+
+    //endregion
+
+    //region Methods
+
+    /**
+     * Gets summary of results of the answered questions
+     *
+     * @return A description of the users answers whether correct or incorrect
+     */
+    public String getQuizResultSummary()
+    {
+        String summary = TacoBellQuizApplication.getContext().getString(R.string.result_summary_text, getNumberCorrect());
+
+        Log.i(LOG_TAG, "getQuizResultSummary: \n" + summary);
+
+        return summary;
+    }
+
+    /**
+     * Gets result details of the answered questions
+     *
+     * @return A description of the users answers whether correct or incorrect
+     */
+    public String getQuizResultDetail()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append(TacoBellQuizApplication.getContext().getString(R.string.answer_one, (isOneCorrect() ? "CORRECT" : "INCORRECT"))).append("\n\n");
+        sb.append(TacoBellQuizApplication.getContext().getString(R.string.answer_two, (isTwoCorrect() ? "CORRECT" : "INCORRECT"))).append("\n\n");
+        sb.append(TacoBellQuizApplication.getContext().getString(R.string.answer_three, (isThreeCorrect() ? "CORRECT" : "INCORRECT"))).append("\n\n");
+        sb.append(TacoBellQuizApplication.getContext().getString(R.string.answer_four, (isFourCorrect() ? "CORRECT" : "INCORRECT"))).append("\n\n");
+        sb.append(TacoBellQuizApplication.getContext().getString(R.string.answer_five, (isFiveCorrect() ? "CORRECT" : "INCORRECT"))).append("\n\n");
+        sb.append(TacoBellQuizApplication.getContext().getString(R.string.answer_six, (isSixCorrect() ? "CORRECT" : "INCORRECT"))).append("\n\n");
+        sb.append(TacoBellQuizApplication.getContext().getString(R.string.answer_seven, (isSevenCorrect() ? "CORRECT" : "INCORRECT"))).append("\n\n");
+        sb.append(TacoBellQuizApplication.getContext().getString(R.string.answer_eight, (isEightCorrect() ? "CORRECT" : "INCORRECT"))).append("\n\n");
+
+        Log.i(LOG_TAG, "getQuizResultDetail: \n" + sb.toString());
+
+        return sb.toString();
+    }
+
+    /**
+     * Create a string representation of the fields in the object
+     *
+     * @return a string representation of the object.
+     */
+    @Override
+    public String toString() {
+        return "One: " + one + " Two: " + two + " Three: " + three
+                + " Four: " + four + " Five: " + five + " Six: " + six
+                + " Seven: " + seven + " Eight: " + eight;
+    }
+
+    //endregion
+
+    //region Helpers
+
+    /**
+     * Determines if question one is correct
+     *
+     * @return true if the answer to question one is correct
+     */
+    private boolean isOneCorrect()
+    {
+        return (one.equals("1.29"));
+    }
+
+    /**
+     * Determines if question two is correct
+     *
+     * @return true if the answer to question two is correct
+     */
+    private boolean isTwoCorrect()
+    {
+        return (!(getByteFromNullableBool(two) == 1));
+    }
+
+    /**
+     * Determines if question three is correct
+     *
+     * @return true if the answer to question three is correct
+     */
+    private boolean isThreeCorrect() {
+        return (three.containsAll(new ArrayList<>(Arrays.asList(
+                TacoBellQuizApplication.getContext().getString(R.string.beef),
+                TacoBellQuizApplication.getContext().getString(R.string.beans),
+                TacoBellQuizApplication.getContext().getString(R.string.cheese),
+                TacoBellQuizApplication.getContext().getString(R.string.nacho_cheese),
+                TacoBellQuizApplication.getContext().getString(R.string.sour_cream)))));
+    }
+
+    /**
+     * Determines if question four is correct
+     *
+     * @return true if the answer to question four is correct
+     */
+    private boolean isFourCorrect()
+    {
+        return (getByteFromNullableBool(four) == 1);
+    }
+
+    /**
+     * Determines if question five is correct
+     *
+     * @return true if the answer to question five is correct
+     */
+    private boolean isFiveCorrect()
+    {
+        return (!(getByteFromNullableBool(five) == 1));
+    }
+
+    /**
+     * Determines if question six is correct
+     *
+     * @return true if the answer to question six is correct
+     */
+    private boolean isSixCorrect()
+    {
+        return (six == 15);
+    }
+
+    /**
+     * Determines if question seven is correct
+     *
+     * @return true if the answer to question seven is correct
+     */
+    private boolean isSevenCorrect()
+    {
+        return (getByteFromNullableBool(seven) == 1);
+    }
+
+    /**
+     * Determines if question eight is correct
+     *
+     * @return true if the answer to question eight is correct
+     */
+    private boolean isEightCorrect()
+    {
+        return (eight == 2002);
     }
 
     /**
      * Gets the number of correctly answered questions
      *
-     * @Returns the number of correctly answered questions
+     * @return the number of correctly answered questions
      */
-    public int getNumberCorrect() {
+    private int getNumberCorrect() {
         int correct = 0;
 
         if (isOneCorrect()) correct++;
@@ -119,167 +339,29 @@ public class QuizAnswers
     }
 
     /**
-     * Get list of ingredients.
-     *
-     * @Returns a list of ingredients as strings
+     * Convert three state Boolean to byte
+     * @param bool is a nullable Boolean
+     * @return -1 if null, 0 if false, 1 if true
      */
-    public List<String> getSelectedIngredients() {
-
-        CheckBox sourCream = activity.findViewById(R.id.sour_cream);
-        CheckBox jalapenoSauce = activity.findViewById(R.id.jalapeno_sauce);
-        CheckBox redSauce = activity.findViewById(R.id.red_sauce);
-        CheckBox nachoCheese = activity.findViewById(R.id.nacho_cheese);
-        CheckBox beans = activity.findViewById(R.id.beans);
-        CheckBox beef = activity.findViewById(R.id.beef);
-        CheckBox cheese = activity.findViewById(R.id.cheese);
-        CheckBox onion = activity.findViewById(R.id.onion);
-
-        List<String> ingredients = new ArrayList<String>(6);
-
-        if (sourCream.isChecked())
-            ingredients.add("Sour Cream");
-        if (jalapenoSauce.isChecked())
-            ingredients.add("Jalapeno Sauce");
-        if (redSauce.isChecked())
-            ingredients.add("Red Sauce");
-        if (nachoCheese.isChecked())
-            ingredients.add("Nacho Cheese");
-        if (beans.isChecked())
-            ingredients.add("Beans");
-        if (beef.isChecked())
-            ingredients.add("Beef");
-        if (cheese.isChecked())
-            ingredients.add("Cheese");
-        if (onion.isChecked())
-            ingredients.add("Onion");
-
-        return ingredients;
-    }
-
-
-    public String createQuizSummary()
+    private byte getByteFromNullableBool(Boolean bool)
     {
-        StringBuffer sb = new StringBuffer();
-        sb.append(activity.getString(R.string.answer_one, (isOneCorrect() ? "CORRECT" : "INCORRECT")) + "\n\n");
-        sb.append(activity.getString(R.string.answer_two, (isTwoCorrect() ? "CORRECT" : "INCORRECT")) + "\n\n");
-        sb.append(activity.getString(R.string.answer_three, (isThreeCorrect() ? "CORRECT" : "INCORRECT")) + "\n\n");
-        sb.append(activity.getString(R.string.answer_four, (isFourCorrect() ? "CORRECT" : "INCORRECT")) + "\n\n");
-        sb.append(activity.getString(R.string.answer_five, (isFiveCorrect() ? "CORRECT" : "INCORRECT")) + "\n\n");
-        sb.append(activity.getString(R.string.answer_six, (isSixCorrect() ? "CORRECT" : "INCORRECT")) + "\n\n");
-        sb.append(activity.getString(R.string.answer_seven, (isSevenCorrect() ? "CORRECT" : "INCORRECT")) + "\n\n");
-        sb.append(activity.getString(R.string.answer_eight, (isEightCorrect() ? "CORRECT" : "INCORRECT")) + "\n\n");
+        if (bool == null)
+            return -1;
 
-        return sb.toString();
+        return (byte)(bool ? 1 : 0);
     }
 
-    //region Helpers
-
     /**
-     * Determines if question one is correct
-     *
-     * @Returns true if the answer to question one is correct
+     * Convert a byte to a three state Boolean
+     * @param b is a byte whose value is -1 if Boolean is null, 0 if false, 1 if true
+     * @return the proper Boolean value
      */
-    private boolean isOneCorrect()
+    private Boolean setNullableBoolFromByte(byte b)
     {
-        return (one.equals("1.29"));
-    }
+        if (b == -1)
+            return null;
 
-    /**
-     * Determines if question two is correct
-     *
-     * @Returns true if the answer to question two is correct
-     */
-    private boolean isTwoCorrect()
-    {
-        return (!two);
-    }
-
-    /**
-     * Determines if question three is correct
-     *
-     * @Returns true if the answer to question three is correct
-     */
-    private boolean isThreeCorrect() {
-        return (three.containsAll(new ArrayList<String>(Arrays.asList(
-                new String[] { "Beef", "Beans", "Cheese", "Nacho Cheese", "Sour Cream" }))));
-    }
-
-    /**
-     * Determines if question four is correct
-     *
-     * @Returns true if the answer to question four is correct
-     */
-    private boolean isFourCorrect()
-    {
-        return (four);
-    }
-
-    /**
-     * Determines if question five is correct
-     *
-     * @Returns true if the answer to question five is correct
-     */
-    private boolean isFiveCorrect()
-    {
-        return (!five);
-    }
-
-    /**
-     * Determines if question six is correct
-     *
-     * @Returns true if the answer to question six is correct
-     */
-    private boolean isSixCorrect()
-    {
-        return (six == 15);
-    }
-
-    /**
-     * Determines if question seven is correct
-     *
-     * @Returns true if the answer to question seven is correct
-     */
-    private boolean isSevenCorrect()
-    {
-        return (seven);
-    }
-
-    /**
-     * Determines if question eight is correct
-     *
-     * @Returns true if the answer to question eight is correct
-     */
-    private boolean isEightCorrect()
-    {
-        return (eight == 2002);
-    }
-
-    /**
-     * Returns a string representation of the object. In general, the
-     * {@code toString} method returns a string that
-     * "textually represents" this object. The result should
-     * be a concise but informative representation that is easy for a
-     * person to read.
-     * It is recommended that all subclasses override this method.
-     * <p>
-     * The {@code toString} method for class {@code Object}
-     * returns a string consisting of the name of the class of which the
-     * object is an instance, the at-sign character `{@code @}', and
-     * the unsigned hexadecimal representation of the hash code of the
-     * object. In other words, this method returns a string equal to the
-     * value of:
-     * <blockquote>
-     * <pre>
-     * getClass().getName() + '@' + Integer.toHexString(hashCode())
-     * </pre></blockquote>
-     *
-     * @return a string representation of the object.
-     */
-    @Override
-    public String toString() {
-        return "One: " + one + " Two: " + two + " Three: " + three
-                + " Four: " + four + " Five: " + five + " Six: " + six
-                + " Seven: " + seven + " Eight: " + eight;
+        return b != 0;
     }
 
     //endregion

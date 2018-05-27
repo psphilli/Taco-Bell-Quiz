@@ -5,36 +5,38 @@
     <string name="app_name">Taco Bell Quiz</string>
 
     <!-- Questions -->
-    <string name="question_one">How much does a Crunchy Taco cost?</string>
-    <string name="question_two">Is the acutal name of the Bean Burrito\'s red sauce \'Salsa Roja\'?</string>
-    <string name="question_three">What are the ingredients in the Beefy 5 Layer Burrito?</string>
-    <string name="question_four">Is Taco Bell good to eat during pregnancy?</string>
-    <string name="question_five">Which costs more Burrito Supreme or Mexican Pizza?</string>
-    <string name="question_six">How old was Gidget when she died?</string>
-    <string name="question_seven">Conspiracist believe that the Illuminati runs Taco Bell and that the six (6) embedded in the logo symbolizes the \'Mark of the Beast\'?</string>
-    <string name="question_eight">In what year was the Cheese Quesadilla added to the menu?</string>
+    <string name="question_one">1. How much does a Crunchy Taco cost?</string>
+    <string name="question_two">2. Is the actual name of the Bean Burrito\'s red sauce \'Salsa Roja\'?</string>
+    <string name="question_three">3. What are the ingredients in the Beefy 5 Layer Burrito?</string>
+    <string name="question_four">4. Is Taco Bell good to eat during pregnancy?</string>
+    <string name="question_five">5. Which costs more Burrito Supreme or Mexican Pizza?</string>
+    <string name="question_six">6. How old was Gidget when she died?</string>
+    <string name="question_seven">7. Conspiracist believe that the Illuminati runs Taco Bell and that the six (6) embedded in the logo symbolizes the \'Mark of the Beast\'?</string>
+    <string name="question_eight">8. In what year was the Cheese Quesadilla added to the menu?</string>
 
-    <!-- Questions -->
+    <!-- Answers -->
     <string name="answer_one">1) <xliff:g id="correct_incorrect" example="CORRECT">%s</xliff:g> - The Crunchy Taco is the basis for all other menu items.  Knowing the correct cost is $1.29 is key to being able to maximize your order with the funds you have on hand.</string>
     <string name="answer_two">2) <xliff:g id="correct_incorrect" example="CORRECT">%s</xliff:g> - Although \'Salsa Roja\' or Red Sauce is of the key ingredients of the Bean Burrito, Taco Bell does not use the Spanish designation.</string>
     <string name="answer_three">3) <xliff:g id="correct_incorrect" example="CORRECT">%s</xliff:g> - The ingredients of the Beefy 5 Layer Burrito are Beef, Beans, Cheese, Sour Cream and Nacho Cheese.  Mouth Water!</string>
-    <string name="answer_four">4) <xliff:g id="correct_incorrect" example="CORRECT">%s</xliff:g> - Taco Bell is good to eat anytime, but is reported to be especially appealing during pregnancy! YUM! According to USA Today, \'There are some nutritious ingredients...\'</string>
+    <string name="answer_four">4) <xliff:g id="correct_incorrect" example="CORRECT">%s</xliff:g> - Taco Bell is good to eat anytime, but is reported to be especially appealing during pregnancy! YUM! According to USA Today, \'There are some nutritious ingredients…\'</string>
     <string name="answer_five">5) <xliff:g id="correct_incorrect" example="CORRECT">%s</xliff:g> - Save up your money, cause both will set you back. The Mexican Pizza at $3.59 costs more than the Burrito Supreme comes in at $3.19.</string>
     <string name="answer_six">6) <xliff:g id="correct_incorrect" example="CORRECT">%s</xliff:g> - Was Gidget really a she? Gidget died in 2009 at the ripe old age of 15 human years (105 dog years), and was immediately taxidermied and sent to the Smithsonian.</string>
     <string name="answer_seven">7) <xliff:g id="correct_incorrect" example="CORRECT">%s</xliff:g> - Of course the Taco Bell Corporation is to big not to be controlled by the Illuminati.</string>
     <string name="answer_eight">8) <xliff:g id="correct_incorrect" example="CORRECT">%s</xliff:g> - The Cheese Quesadilla appeared on the in 2002, not a minute to early.</string>
 
-    <!--
-      Submit quiz results for evaluation. It will be shown in the format of
-      "You have answered 6 out of 8 question correct, press submit to see results, or go back and try to fix the incorrect responses". [CHAR LIMIT=NONE]
-    -->
-    <string name="submit_all_correct_text">You have answered <xliff:g id="number_correct" example="6">%d</xliff:g> out of 8 questions correctly. Press submit to see the results, or go back and try to fix the incorrect responses.</string>
 
     <!--
-      Subject line for the quiz summary email. It will be in the format of
-      "Taco Bell Quiz Summary" [CHAR LIMIT=NONE]
+      Quiz result summary. It will be shown in the format of
+      "You have answered 6 out of 8 question correctly." [CHAR LIMIT=NONE]
     -->
-    <string name="quiz_summary_email_subject">Taco Bell Quiz Summary</string>
+    <string name="result_summary_text">You have answered <xliff:g id="number_correct" example="6">%d</xliff:g> out of 8 questions correctly.</string>
+
+
+    <!--
+      For tool display, quiz results [CHAR LIMIT=NONE]
+    -->
+    <string name="results_text">1) INCORRECT - The Crunchy Taco is the basis for all other menu items. Knowing the correct cost is $1.29 is key to being able to maximize your order with the funds you have on hand.\n\n2) CORRECT - Although \'Salsa Roja\' or Red Sauce is of the key ingredients of the Bean Burrito, Taco Bell does not use the Spanish designation.\n\n3) INCORRECT - The ingredients of the Beefy 5 Layer Burrito are Beef, Beans, Cheese, Sour Cream and Nacho Cheese. Mouth Water!\n\n4) CORRECT - Taco Bell is good to eat anytime, but is reported to be especially appealing during pregnancy! YUM! According to USA Today, \'There are some nutritious ingredients…\'\n\n5) CORRECT - Save up your money, cause both will set you back. The Mexican Pizza at $3.59 costs more than the Burrito Supreme comes in at $3.19.\n\n6) INCORRECT - Was Gidget really a she? Gidget died in 2009 at the ripe old age of 15 human years (105 dog years), and was immediately taxidermied and sent to the Smithsonian.\n\n7) CORRECT - Of course the Taco Bell Corporation is to big not to be controlled by the Illuminati.\n\n8) INCORRECT - The Cheese Quesadilla appeared on the in 2002, not a minute to early.</string>
+
 
     <!-- Toast's -->
     <string name="price_help">Please enter price</string>
@@ -49,6 +51,7 @@
     <string name="burrito_supreme">Burrito\nSupreme</string>
     <string name="mexican_pizza">Mexican\nPizza</string>
 
+    <!-- Burrito Supreme question ingredients, question 3 -->
     <string name="beef">Beef</string>
     <string name="beans">Beans</string>
     <string name="red_sauce">Red Sauce</string>
@@ -58,8 +61,10 @@
     <string name="nacho_cheese">Nacho Cheese</string>
     <string name="jalapeno_sauce">Jalapeno Sauce</string>
 
-    <string name="initial_age">7</string>
-    <string name="initial_year">1997</string>
+    <string name="initial_age">10</string>
+    <string name="initial_year">2005</string>
 
-    <string name="submit_text">Submit</string>
+    <string name="monetary_sign">$</string>
+    <string name="increase">+</string>
+    <string name="decrease">-</string>
 </resources>

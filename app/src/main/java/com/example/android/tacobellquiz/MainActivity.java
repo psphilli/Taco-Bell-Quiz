@@ -1,44 +1,48 @@
 package com.example.android.tacobellquiz;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.List;
-
 public class MainActivity extends FragmentActivity {
-
     private final String LOG_TAG = MainActivity.class.getSimpleName();
-    private QuizAnswers answers = new QuizAnswers(this);
+    private final static String QUIZ_ANSWER_BUNDLE= "answers";
+    private ViewPager mViewPager;
+    private QuizAnswers mAnswers = new QuizAnswers();
+    private ImageView mLeftNav;
+    private ImageView mRightNav;
 
-    //region Event Handlers
+    //region Overrides
 
+    /**
+     * Creates the main activity
+     *
+     * @param savedInstanceState contains the serialized answers object
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
-        ViewPager viewPager = findViewById(R.id.viewPager);
-        viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mLeftNav = findViewById(R.id.left_nav);
+        mRightNav = findViewById(R.id.right_nav);
+        mLeftNav.setVisibility(View.GONE);
+
+        mViewPager = findViewById(R.id.viewPager);
+        mViewPager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrollStateChanged(int state) {}
             @Override
@@ -48,206 +52,150 @@ public class MainActivity extends FragmentActivity {
                 onPageChange(position);
             }
         });
+
+        // Set onClick listener for forward (right) navigation chevron
+        mRightNav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentItem = mViewPager.getCurrentItem();
+                if ((currentItem + 1) < mViewPager.getAdapter().getCount())
+                {
+                    mViewPager.setCurrentItem((currentItem + 1));
+                }
+            }
+        });
+
+        // Set onClick listener for back (left) navigation chevron
+        mLeftNav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentItem = mViewPager.getCurrentItem();
+                if ((currentItem) > 0)
+                {
+                    mViewPager.setCurrentItem((currentItem - 1));
+                }
+            }
+        });
     }
 
     /**
-     * Handler for 5 Layer Ingredients checkbox.
+     * Save all appropriate fragment state data.
+     *
+     * @param outState contains the serialized answers object
      */
-    public void onIngredientClick(View view) {
-        List<String> ingredients = answers.getSelectedIngredients();
-        if (5 < ingredients.size())
-        {
-            CheckBox checkBox = (CheckBox) view;
-            checkBox.setChecked(false);
-            Toast.makeText(view.getContext(), R.string.choose_five_help, Toast.LENGTH_SHORT).show();
-        }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(QUIZ_ANSWER_BUNDLE, mAnswers);
+
+        super.onSaveInstanceState(outState);
     }
 
     /**
-     * Handler for which costs more radio group.
+     * Return all appropriate fragment state data.
+     *
+     * @param savedInstanceState contains the serialized answers object
      */
-    public void onCostMoreClick(View view) {
-        ImageView imageView = findViewById(R.id.cost_more_image);
-        if (view.getId() == R.id.burrito_supreme_more) {
-            imageView.setImageResource(R.drawable.burritosupreme);
-        }
-        else {
-            imageView.setImageResource(R.drawable.mexicanpizza);
-        }
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        mAnswers = savedInstanceState.getParcelable(QUIZ_ANSWER_BUNDLE);
     }
 
-    /**
-     * Handler for age increment/decrement buttons.
-     */
-    public void onchangeAgeClick(View view) {
-        TextView textView = findViewById(R.id.age_text_view);
-        int age = Integer.parseInt(textView.getText().toString());
-        if (view.getId() == R.id.decrement_age) {
-            age--;
-        }
-        else {
-            age++;
-        }
-        textView.setText("" + age);
-        answers.setSix(age);
-    }
+    //endregion
 
-    /**
-     * Handler for year increment/decrement buttons.
-     */
-    public void onchangeYearClick(View view) {
-        TextView textView = findViewById(R.id.year_text_view);
-        int year = Integer.parseInt(textView.getText().toString());
-        if (view.getId() == R.id.decrement_year) {
-            year--;
-        }
-        else {
-            year++;
-        }
-        textView.setText("" + year);
-        answers.setEight(year);
-    }
-
-    /**
-     * Handler for backward navigation.
-     */
-    public void onForwardClick(View view) {
-        ViewPager viewpager = findViewById(R.id.viewPager);
-        int currentItem = viewpager.getCurrentItem();
-        if ((currentItem + 1) < viewpager.getAdapter().getCount())
-        {
-            viewpager.setCurrentItem((currentItem + 1));
-        }
-    }
-
-    /**
-     * Handler for backward navigation.
-     */
-    public void onBackwardClick(View view) {
-        ViewPager viewpager = findViewById(R.id.viewPager);
-        int currentItem = viewpager.getCurrentItem();
-        if ((currentItem) > 0)
-        {
-            viewpager.setCurrentItem((currentItem - 1));
-        }
-    }
-
-    public void onSubmitResults(View view) {
-        String quizSummary = answers.createQuizSummary();
-
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:"));
-        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.quiz_summary_email_subject));
-        intent.putExtra(Intent.EXTRA_TEXT, quizSummary);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        }
-    }
+    //region Event Handlers
 
     /**
      *  Validate answer is correctly chosen before allowing page change
      */
     private void onPageChange(int position) {
-        ViewPager viewPager = findViewById(R.id.viewPager);
 
         try {
+            Log.i(LOG_TAG, "position: " + Integer.toString(position));
+
+            mLeftNav.setVisibility(View.VISIBLE);
+            mRightNav.setVisibility(View.VISIBLE);
+
             switch (position) {
+                case (0): {
+                    mLeftNav.setVisibility(View.GONE);
+                }
+
                 case (1): {
                     EditText questionOne = findViewById(R.id.crunchy_taco_cost);
                     if (questionOne.getText().toString().length() != 0) {
-                        answers.setOne(questionOne.getText().toString());
+                        mAnswers.setOne(questionOne.getText().toString());
 
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(viewPager.getWindowToken(), 0);
+                        imm.hideSoftInputFromWindow(mViewPager.getWindowToken(), 0);
                     } else {
-                        viewPager.setCurrentItem(0);
+                        mViewPager.setCurrentItem(0);
                         Toast.makeText(getApplicationContext(), R.string.price_help, Toast.LENGTH_SHORT).show();
                     }
-                    Log.i(LOG_TAG, " answers.one '" + answers.getOne() + "'");
+                    Log.i(LOG_TAG, " mAnswers.one '" + mAnswers.getOne() + "'");
                     break;
                 }
 
                 case (2): {
-                    RadioGroup questionTwoRadioGroup = findViewById(R.id.red_sauce_radio_group);
-                    int selectedId = questionTwoRadioGroup.getCheckedRadioButtonId();
-                    if (selectedId == R.id.yes_red_sauce_name || selectedId == R.id.no_red_sauce_name) {
-                        answers.setTwo(selectedId == R.id.yes_red_sauce_name);
-                    } else {
-                        viewPager.setCurrentItem(1);
+                    // Catch unset state
+                    if (mAnswers.getTwo() == null) {
+                        mViewPager.setCurrentItem(1);
                         Toast.makeText(getApplicationContext(), R.string.yes_no_help, Toast.LENGTH_SHORT).show();
                     }
-                    Log.i(LOG_TAG, " answers.two '" + answers.isTwo() + "'");
+                    Log.i(LOG_TAG, " mAnswers.two '" + mAnswers.getTwo() + "'");
                     break;
                 }
 
                 case (3): {
-                    List<String> ingredients = answers.getSelectedIngredients();
-                    if (5 == ingredients.size()) {
-                        answers.setThree(ingredients);
-                    } else {
-                        viewPager.setCurrentItem(2);
+                    if (5 != mAnswers.getThree().size()) {
+                        mViewPager.setCurrentItem(2);
                         Toast.makeText(getApplicationContext(), R.string.choose_five_help, Toast.LENGTH_SHORT).show();
                     }
-                    Log.i(LOG_TAG, " answers.three '" + TextUtils.join(",", answers.getThree()) + "'");
+                    Log.i(LOG_TAG, " mAnswers.three '" + TextUtils.join(",", mAnswers.getThree()) + "'");
                     break;
                 }
 
                 case (4): {
-                    RadioGroup questionTwoRadioGroup = findViewById(R.id.pregnant_radio_group);
-                    int selectedId = questionTwoRadioGroup.getCheckedRadioButtonId();
-                    if (selectedId == R.id.yes_when_pregnant || selectedId == R.id.no_when_pregnant) {
-                        answers.setFour(selectedId == R.id.yes_when_pregnant);
-                    } else {
-                        viewPager.setCurrentItem(3);
+                    // Catch unset state
+                    if (mAnswers.getFour() == null) {
+                        mViewPager.setCurrentItem(3);
                         Toast.makeText(getApplicationContext(), R.string.yes_no_help, Toast.LENGTH_SHORT).show();
                     }
-                    Log.i(LOG_TAG, " answers.four '" + answers.isFour() + "'");
+                    Log.i(LOG_TAG, " mAnswers.four '" + mAnswers.getFour() + "'");
                     break;
                 }
 
                 case (5): {
-                    RadioGroup questionTwoRadioGroup = findViewById(R.id.cost_more_radio_group);
-                    int selectedId = questionTwoRadioGroup.getCheckedRadioButtonId();
-                    if (selectedId == R.id.burrito_supreme_more || selectedId == R.id.mexican_pizza_more) {
-                        answers.setFive(selectedId == R.id.burrito_supreme_more);
-                    } else {
-                        viewPager.setCurrentItem(4);
+                    // Catch unset state
+                    if (mAnswers.getFive() == null) {
+                        mViewPager.setCurrentItem(4);
                         Toast.makeText(getApplicationContext(), R.string.costs_more_help, Toast.LENGTH_SHORT).show();
                     }
-                    Log.i(LOG_TAG, " answers.five '" + (answers.isFive() ? "burrito supreme" : "mexican pizza") + "'");
+                    Log.i(LOG_TAG, " mAnswers.five '" + (mAnswers.getFive() ? "burrito supreme" : "mexican pizza") + "'");
                     break;
                 }
 
                 case (6): {
-                    Log.i(LOG_TAG, " answers.six'" + answers.getSix() + "'");
+                    Log.i(LOG_TAG, " mAnswers.six '" + mAnswers.getSix() + "'");
                     break;
                 }
 
                 case (7): {
-                    RadioGroup questionTwoRadioGroup = findViewById(R.id.illuminati_radio_group);
-                    int selectedId = questionTwoRadioGroup.getCheckedRadioButtonId();
-                    if (selectedId == R.id.yes_illuminati || selectedId == R.id.no_illuminati) {
-                        answers.setSeven(selectedId == R.id.yes_illuminati);
-                    } else {
-                        viewPager.setCurrentItem(5);
+                    // Catch unset state
+                    if (mAnswers.getSeven() == null) {
+                        mViewPager.setCurrentItem(6);
                         Toast.makeText(getApplicationContext(), R.string.yes_no_help, Toast.LENGTH_SHORT).show();
                     }
-                    Log.i(LOG_TAG, " answers.seven '" + answers.isSeven() + "'");
+                    Log.i(LOG_TAG, " mAnswers.seven '" + mAnswers.getSeven() + "'");
                     break;
                 }
 
                 case (8): {
-                    Log.i(LOG_TAG, " answers.eight '" + answers.getEight() + "'");
-
-                    int numCorrect = answers.getNumberCorrect();
-                    TextView submitTextView = findViewById(R.id.submit_text_view);
-                    submitTextView.setText(getString(R.string.submit_all_correct_text, numCorrect));
-                    if (numCorrect == 8) {
-                        onSubmitResults(null);
-                    }
+                    Log.i(LOG_TAG, " mAnswers.eight '" + mAnswers.getEight() + "'");
+                    mRightNav.setVisibility(View.GONE);
                     break;
                 }
-
             }
         }
         catch (Exception ex)
@@ -258,22 +206,14 @@ public class MainActivity extends FragmentActivity {
 
     //endregion
 
-    public String getGidgetAge()
-    {
-        return String.valueOf(answers.getSix());
-    }
-
-    public String getYearQuesadilla()
-    {
-        return String.valueOf(answers.getEight());
-    }
+    //region Internal Class PageAdapter
 
     /**
      * Internal implementation of FragmentPagerAdapter
      */
     private class PagerAdapter extends FragmentPagerAdapter {
 
-        public PagerAdapter(FragmentManager fm) {
+        PagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -281,14 +221,14 @@ public class MainActivity extends FragmentActivity {
         public Fragment getItem(int pos) {
             switch(pos) {
                 case 0: return new QuestionOne();
-                case 1: return new QuestionTwo();
-                case 2: return new QuestionThree();
-                case 3: return new QuestionFour();
-                case 4: return new QuestionFive();
-                case 5: return new QuestionSix();
-                case 6: return new QuestionSeven();
-                case 7: return new QuestionEight();
-                case 8: return new Submit();
+                case 1: return QuestionTwo.newInstance(mAnswers);
+                case 2: return QuestionThree.newInstance(mAnswers);
+                case 3: return QuestionFour.newInstance(mAnswers);
+                case 4: return QuestionFive.newInstance(mAnswers);
+                case 5: return QuestionSix.newInstance(mAnswers);
+                case 6: return QuestionSeven.newInstance(mAnswers);
+                case 7: return QuestionEight.newInstance(mAnswers);
+                case 8: return Results.newInstance(mAnswers);
                 default: return new QuestionOne();
             }
         }
@@ -298,4 +238,6 @@ public class MainActivity extends FragmentActivity {
             return 9;
         }
     }
+
+    //endregion
 }
